@@ -22,13 +22,11 @@ public partial class MainWindow
         else AppInstaller.RefreshInstalled(_installApps);
 
         bool winget = AppInstaller.WingetAvailable;
-        BtnAppsStore.Visibility = winget ? Visibility.Collapsed : Visibility.Visible;
-        BtnAppsInstall.IsEnabled = winget;
+        BtnAppsStore.Visibility = Visibility.Collapsed; // o winget é instalado pelo próprio MiCORE (WingetSetup)
+        BtnAppsInstall.IsEnabled = true;
         int installed = _installApps.Count(a => a.Installed);
-        AppsStatus.Text = winget
-            ? $"{installed} de {_installApps.Count} já instalados. Marque o que quer e clique em INSTALAR SELECIONADOS."
-            : "O winget não foi encontrado. Em PC recém-formatado ele aparece depois que a Microsoft Store atualiza o " +
-              "\"Instalador de Aplicativo\": use o botão abaixo, espere atualizar e abra esta página de novo.";
+        AppsStatus.Text = $"{installed} de {_installApps.Count} já instalados. Marque o que quer e clique em INSTALAR SELECIONADOS." +
+            (winget ? "" : " O winget não está neste PC: o MiCORE instala ele sozinho antes (download oficial da Microsoft).");
     }
 
     private void BtnAppsAll_Click(object sender, RoutedEventArgs e)
@@ -62,6 +60,16 @@ public partial class MainWindow
             var r = MessageBox.Show("WinRAR e 7-Zip fazem a mesma coisa. Instalar os dois mesmo assim?", "Instalar apps",
                                     MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (r != MessageBoxResult.Yes) return;
+        }
+
+        if (!AppInstaller.WingetAvailable)
+        {
+            _appsBusy = true;
+            BtnAppsInstall.IsEnabled = false;
+            string? err;
+            try { err = await WingetSetup.EnsureAsync(t => Dispatcher.BeginInvoke(new Action(() => AppsStatus.Text = t))); }
+            finally { _appsBusy = false; BtnAppsInstall.IsEnabled = true; }
+            if (err != null) { AppsStatus.Text = "Não foi possível instalar o winget: " + err + "."; return; }
         }
 
         _appsBusy = true; _appsStop = false;

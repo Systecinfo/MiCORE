@@ -10,7 +10,7 @@
 
 ## Novidades da v0.16
 - **Inicialização** (MiCORE FERRAMENTAS): veja, desative ou remova os programas que abrem junto com o Windows, com opção de desfazer.
-- **Instalar apps** (MiCORE FERRAMENTAS): Steam, Chrome, Discord, Lightshot, 7-Zip, WinRAR e VLC de uma vez depois de formatar, pelo winget.
+- **Instalar apps** (MiCORE FERRAMENTAS): Steam, Chrome, Discord, Lightshot, 7-Zip, WinRAR e VLC de uma vez depois de formatar, pelo winget (se ele faltar, como no Windows LTSC, o MiCORE instala sozinho a versão oficial da Microsoft).
 - **MiCORE MAKER** (nova categoria): Portas COM (fantasmas e números COM presos, que saiu de Otimização) e Drivers seriais
   (CH340, CP2102, FTDI, Prolific e Arduino: diagnóstico, reinstalar, trocar ou remover versão do driver, Arduino IDE).
 - **Abertura mais rápida**: a janela aparece em ~0,5 s (antes ~4,6 s); o hardware é lido em paralelo, em segundo plano.

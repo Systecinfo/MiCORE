@@ -150,11 +150,6 @@ public partial class MainWindow
     private async void BtnMakerIde_Click(object sender, RoutedEventArgs e)
     {
         if (_makerBusy) return;
-        if (!AppInstaller.WingetAvailable)
-        {
-            MakerIdeResult.Text = "O winget não foi encontrado: abra MiCORE FERRAMENTAS › Instalar apps para ver como resolver, ou baixe a IDE no site.";
-            return;
-        }
         if (MakerDrivers.IdeRunning)
         {
             MakerIdeResult.Text = "Feche a Arduino IDE antes (salve o sketch) e clique de novo.";
@@ -163,6 +158,17 @@ public partial class MainWindow
         bool installed = MakerDrivers.IdeVersion() != null;
         var app = new InstallableApp { Name = "Arduino IDE", WingetId = "ArduinoSA.IDE.stable" };
         MakerBusy(true);
+        if (!AppInstaller.WingetAvailable)
+        {
+            // O winget não vem no Windows LTSC nem em PC sem Microsoft Store: o MiCORE instala antes.
+            string? err = await WingetSetup.EnsureAsync(t => Dispatcher.BeginInvoke(new Action(() => MakerIdeResult.Text = t)));
+            if (err != null)
+            {
+                MakerIdeResult.Text = "Não foi possível instalar o winget: " + err + ". Se preferir, baixe a IDE no site.";
+                MakerBusy(false);
+                return;
+            }
+        }
         MakerIdeResult.Text = installed ? "Atualizando a Arduino IDE… (pode levar alguns minutos)" : "Instalando a Arduino IDE… (pode levar alguns minutos)";
         try
         {
