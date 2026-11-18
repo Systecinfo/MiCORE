@@ -122,8 +122,8 @@ public sealed class SensorMonitor : IDisposable
             "O MiCORE não está rodando como administrador, e o Windows só libera os sensores internos da CPU " +
             "nesse modo. Feche e abra de novo aceitando o pedido de administrador.",
         CpuSensorProblem.PawnIOMissing =>
-            "Falta o driver PawnIO, que lê a temperatura e o consumo da CPU. Ele é gratuito, assinado e usado também " +
-            "pelo LibreHardwareMonitor e pelo FanControl. Depois de instalar, feche e abra o MiCORE.",
+            "Falta o driver PawnIO, que lê a temperatura e o consumo da CPU. Ele vem dentro do MiCORE e é instalado " +
+            "pelo botão CORRIGIR (é gratuito, assinado e usado também pelo LibreHardwareMonitor e pelo FanControl).",
         CpuSensorProblem.ReadFailed =>
             "O PawnIO está instalado, mas a leitura falhou. Se acabou de instalar, reinicie o PC. Se continuar, " +
             "confira se o antivírus não bloqueou o driver ou se a CPU é muito antiga/recente para a biblioteca de sensores.",

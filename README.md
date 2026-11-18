@@ -105,7 +105,7 @@ App WPF (.NET 8) com:
   tempo de DNS, velocidade de download/upload (servidor público speed.cloudflare.com) e latência sob carga (bufferbloat). O veredito aponta se o
   problema está na rede local (Wi-Fi/cabo/roteador), no provedor ou se a conexão está estável.
 - **MiCORE INTEGRAÇÃO** (`LightBackends.cs`, `CorsairSdk.cs`, `CorsairSdkInstaller.cs`, `MainWindow.Integ.cs`): controle de iluminação e efeitos
-  de todo o PC numa tela só (em teste). Pontes: **Corsair iCUE / iCUE LINK** (iCUE SDK v4; a DLL é baixada pelo programa, com confirmação e
+  de todo o PC numa tela só (em teste). Pontes: **Corsair iCUE / iCUE LINK** (iCUE SDK v4; a DLL redistribuível oficial vem dentro do .exe, veja `Native/LEIA-ME.md`, ou é baixada pelo programa com
   verificação de assinatura), **OpenRGB** (servidor SDK local; é o caminho para **MSI Mystic Light, Gigabyte RGB Fusion, ASUS Aura**, RAM, Razer,
   Logitech e outras, já que essas marcas não têm SDK público) e **Razer Chroma** (API REST do Synapse). Efeitos: cor fixa, respiração, arco-íris em onda,
   e cores que seguem a **temperatura da CPU/GPU** ou a **carga da CPU**, com brilho e velocidade. Ao devolver ou fechar, cada fabricante reassume as luzes.
@@ -141,7 +141,7 @@ App WPF (.NET 8) com:
 ## Requisitos
 - Windows 10/11
 - .NET 8 SDK (https://dotnet.microsoft.com/download)
-- Driver **PawnIO** (temperatura/consumo da CPU): `winget install namazso.PawnIO`
+- Driver **PawnIO** (temperatura/consumo da CPU): já vem embutido (`Native/PawnIO_setup.exe`) e é instalado em silêncio na primeira abertura.
   A LibreHardwareMonitorLib 0.9.6+ usa o PawnIO no lugar do antigo WinRing0, que o Windows Defender bloqueia.
 
 ## Como rodar
@@ -151,7 +151,7 @@ dotnet run
 ```
 O app pede privilégio de administrador (necessário para sensores de baixo nível).
 Para levar a outro PC: dê dois cliques em `publicar.bat`. Ele gera `..\MiCORE-dist\MiCORE.exe` (arquivo único, com o .NET embutido,
-sem caminhos do seu usuário) + `LEIA-ME.txt`. No outro PC só é preciso instalar o PawnIO. Rode de novo após cada alteração no código.
+sem caminhos do seu usuário) + `LEIA-ME.txt`. No outro PC não é preciso instalar nada: o PawnIO e o iCUE SDK vão dentro do .exe. Rode de novo após cada alteração no código.
 
 ### Baixar a versão mais recente
 A cada push na `main`, o GitHub Actions (`.github/workflows/publicar.yml`) gera o `MiCORE.exe` e atualiza a release

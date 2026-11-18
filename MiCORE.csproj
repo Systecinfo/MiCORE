@@ -29,9 +29,10 @@
     <EmbeddedResource Include="Drivers\**\*" Exclude="Drivers\*.md;Drivers\*.txt" LogicalName="Drivers/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
-  <!-- iCUE SDK da Corsair (MiCORE INTEGRAÇÃO): se a DLL estiver em Native\, ela vai junto do .exe. Não é versionada no git. -->
+  <!-- Dependências embutidas no .exe (BundledDeps.cs): instalador do driver PawnIO (sensores da CPU) e
+       iCUE SDK da Corsair (MiCORE INTEGRAÇÃO). São extraídas só quando faltam no PC. Ver Native\LEIA-ME.md. -->
   <ItemGroup>
-    <None Include="Native\iCUESDK.x64_2019.dll" Condition="Exists('Native\iCUESDK.x64_2019.dll')" Link="iCUESDK.x64_2019.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <EmbeddedResource Include="Native\*" Exclude="Native\*.md" LogicalName="Native/%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

@@ -145,7 +145,7 @@
                             <StackPanel>
                                 <TextBlock Text="Sem temperatura e consumo da CPU" FontWeight="SemiBold" FontSize="12" TextWrapping="Wrap"/>
                                 <TextBlock x:Name="CpuSensorWarnText" Foreground="{DynamicResource Muted}" FontSize="11" TextWrapping="Wrap" Margin="0,3,0,8"/>
-                                <Button Style="{StaticResource PrimaryButton}" Content="CORRIGIR" Padding="10,5" FontSize="11"
+                                <Button x:Name="BtnFixCpuSensors" Style="{StaticResource PrimaryButton}" Content="CORRIGIR" Padding="10,5" FontSize="11"
                                         Click="BtnFixCpuSensors_Click"/>
                             </StackPanel>
                         </Border>

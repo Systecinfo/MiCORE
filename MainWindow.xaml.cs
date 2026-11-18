@@ -157,6 +157,14 @@ public partial class MainWindow : Window
 
         async Task LoadSensors()
         {
+            // O driver PawnIO vem dentro do MiCORE.exe: se faltar, é instalado em silêncio antes de abrir os sensores,
+            // para a temperatura e o consumo da CPU já aparecerem nesta mesma execução.
+            if (!SensorMonitor.IsPawnIOInstalled && SensorMonitor.IsElevated)
+            {
+                StatusText.Text = "Instalando o driver de sensores (PawnIO)…";
+                string? err = await BundledDeps.EnsurePawnIOAsync();
+                if (err != null) StatusText.Text = "Driver de sensores: " + err;
+            }
             try { await _monitor.OpenAsync(); }
             catch (Exception ex) { StatusText.Text = $"Sensores indisponíveis: {ex.Message}"; return; }
             _monitor.Refresh();
@@ -207,36 +215,29 @@ public partial class MainWindow : Window
         };
     }
 
-    private void BtnFixCpuSensors_Click(object sender, RoutedEventArgs e)
+    private async void BtnFixCpuSensors_Click(object sender, RoutedEventArgs e)
     {
         var p = _monitor.DiagnoseCpuSensors();
-        string why = SensorMonitor.Explain(p);
         if (p != SensorMonitor.CpuSensorProblem.PawnIOMissing)
         {
-            MessageBox.Show(why, "MiCORE", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(SensorMonitor.Explain(p), "MiCORE", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
-        // winget vem com o Windows 11 e com o Windows 10 atualizado (App Installer).
-        string winget = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                                               @"Microsoft\WindowsApps\winget.exe");
-        if (!System.IO.File.Exists(winget))
+        // O instalador do PawnIO vem dentro do MiCORE.exe: instala em silêncio, sem internet nem winget.
+        BtnFixCpuSensors.IsEnabled = false;
+        CpuSensorWarnText.Text = "Instalando o driver…";
+        string? err = await BundledDeps.EnsurePawnIOAsync();
+        BtnFixCpuSensors.IsEnabled = true;
+        if (err != null)
         {
-            MessageBox.Show(why + "\n\nO instalador de pacotes do Windows (winget) não foi encontrado neste PC. " +
-                            "Atualize o \"Instalador de Aplicativo\" pela Microsoft Store e use o botão de novo, " +
-                            "ou instale o PawnIO (autor: namazso) manualmente.",
-                            "MiCORE", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Não foi possível instalar o driver de sensores: " + err + ".", "MiCORE",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-
-        var r = MessageBox.Show(why + "\n\nInstalar o PawnIO agora? Vai abrir uma janela com o instalador do Windows (winget). " +
-                                "Quando terminar, feche o MiCORE e abra de novo.",
-                                "MiCORE", MessageBoxButton.YesNo, MessageBoxImage.Question);
-        if (r != MessageBoxResult.Yes) return;
-        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("cmd.exe",
-            "/k winget install --id namazso.PawnIO -e --accept-package-agreements --accept-source-agreements" +
-            " && echo. && echo Pronto! Feche esta janela e reabra o MiCORE.")
-        { UseShellExecute = true });
+        // A biblioteca de sensores só enxerga o driver novo ao ser aberta de novo.
+        MessageBox.Show("Driver de sensores instalado. Feche e abra o MiCORE para ver a temperatura e o consumo da CPU.",
+                        "MiCORE", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     // ---------------- Janela / navegação ----------------
@@ -1444,8 +1445,8 @@ public partial class MainWindow : Window
         {
             string why = SensorMonitor.IsPawnIOInstalled
                 ? ""
-                : "\n\nCausa provável: o driver PawnIO não está instalado. Instale com:\n" +
-                  "winget install namazso.PawnIO\ne reabra o MiCORE.";
+                : "\n\nCausa provável: o driver de sensores (PawnIO) não está instalado. Use o botão CORRIGIR " +
+                  "no menu lateral e reabra o MiCORE.";
             var r = MessageBox.Show("Nenhum sensor de temperatura da CPU foi encontrado, então o corte automático " +
                                     "por temperatura da CPU NÃO funcionará. Continuar mesmo assim?" + why,
                                     "MiCORE", MessageBoxButton.YesNo, MessageBoxImage.Warning);
