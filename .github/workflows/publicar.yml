@@ -1,23 +1,48 @@
+# Build do MiCORE (Windows x64, arquivo único com o .NET embutido) e publicação nas Releases do GitHub.
+#
+# Quando roda:
+#   - push na main ........ compila e guarda o MiCORE.exe como artefato do build (confere se o código compila)
+#   - tag v* (ex.: v0.17.0) cria a Release dessa versão, marcada como "Latest", com MiCORE.exe, MiCORE.zip e SHA256SUMS.txt
+#   - Actions > Publicar > Run workflow: compila; marque "publicar" para criar a Release da versão do MiCORE.csproj
+#
+# Para lançar uma versão:  mude <Version> no MiCORE.csproj (e em signpath/artifact-configuration.xml), atualize NOVIDADES.md e
+#                          git tag v0.17.0 && git push origin v0.17.0
+#
+# Links fixos para a versão mais recente:
+#   https://github.com/Systecinfo/MiCORE/releases/latest/download/MiCORE.exe
+#   https://github.com/Systecinfo/MiCORE/releases/latest/download/MiCORE.zip
+#
+# Assinatura pelo SignPath (SignPath Foundation, gratuita para código aberto): fica desligada até configurar em
+# Settings > Secrets and variables > Actions:
+#   Variables: SIGNPATH_ORGANIZATION_ID, SIGNPATH_PROJECT_SLUG, SIGNPATH_POLICY_SLUG
+#   Secret:    SIGNPATH_API_TOKEN
+# Com isso, cada Release envia o MiCORE.exe para o SignPath e espera a aprovação manual no site antes de publicar.
 name: Publicar
 
-# A cada push na main, gera o MiCORE.exe e atualiza a release "latest" (sempre a versão mais nova).
-# Ao criar uma tag (ex.: v0.12), gera também uma release fixa dessa versão.
 on:
   push:
     branches: [main]
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      publicar:
+        description: 'Criar a Release da versão do MiCORE.csproj'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
+  actions: read # o SignPath lê o artefato do build
 
 concurrency:
-  group: publicar
+  group: publicar-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      RELEASE: ${{ startsWith(github.ref, 'refs/tags/v') || inputs.publicar == true }}
     steps:
       - uses: actions/checkout@v4
 
@@ -25,29 +50,100 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Publicar (arquivo único, com o .NET embutido)
+      - name: Versão e tag
+        id: ver
+        shell: pwsh
+        run: |
+          $v = ([xml](Get-Content MiCORE.csproj)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
+          if ($env:GITHUB_REF -like 'refs/tags/*') { $tag = $env:GITHUB_REF_NAME } else { $tag = "v$v" }
+          if ($env:RELEASE -eq 'true' -and $tag -ne "v$v") { throw "A tag $tag não bate com a versão $v do MiCORE.csproj" }
+          "version=$v" >> $env:GITHUB_OUTPUT
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "Versão $v, tag $tag, release=$env:RELEASE"
+
+      - name: Compilar (arquivo único, com o .NET embutido)
         run: dotnet publish MiCORE.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -o dist -nologo
 
-      - name: Montar pacote
+      - name: Conferir metadados do exe
+        shell: pwsh
+        run: |
+          $i = (Get-Item dist/MiCORE.exe).VersionInfo
+          "Produto: $($i.ProductName) $($i.ProductVersion) · Arquivo: $($i.FileVersion) · Empresa: $($i.CompanyName)"
+          if ($i.ProductName -ne 'MiCORE') { throw "ProductName inesperado: $($i.ProductName)" }
+
+      # ---- Assinatura pelo SignPath (só em Release e só depois de configurar as variáveis) ----
+      - name: Enviar MiCORE.exe sem assinatura (SignPath)
+        id: unsigned
+        if: ${{ env.RELEASE == 'true' && vars.SIGNPATH_ORGANIZATION_ID != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: micore-unsigned
+          path: dist/MiCORE.exe
+
+      - name: Assinar MiCORE.exe (SignPath, aprovação manual)
+        if: ${{ env.RELEASE == 'true' && vars.SIGNPATH_ORGANIZATION_ID != '' }}
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          github-artifact-id: ${{ steps.unsigned.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 7200
+          output-artifact-directory: signed
+
+      - name: Usar o MiCORE.exe assinado
+        if: ${{ env.RELEASE == 'true' && vars.SIGNPATH_ORGANIZATION_ID != '' }}
+        shell: pwsh
+        run: |
+          Copy-Item signed/MiCORE.exe dist/MiCORE.exe -Force
+          $sig = Get-AuthenticodeSignature dist/MiCORE.exe
+          if ($sig.Status -ne 'Valid') { throw "Assinatura inválida: $($sig.Status)" }
+          $sig.SignerCertificate.Subject
+
+      - name: Montar pacote e checksums
         shell: pwsh
         run: |
           Copy-Item LEIA-ME.txt dist/LEIA-ME.txt
-          Compress-Archive -Path dist/MiCORE.exe, dist/LEIA-ME.txt -DestinationPath MiCORE.zip
+          Compress-Archive -Path dist/MiCORE.exe, dist/LEIA-ME.txt -DestinationPath dist/MiCORE.zip -Force
+          Push-Location dist
+          Get-ChildItem MiCORE.exe, MiCORE.zip | ForEach-Object {
+            "$((Get-FileHash $_ -Algorithm SHA256).Hash.ToLower())  $($_.Name)"
+          } | Set-Content SHA256SUMS.txt -Encoding ascii
+          Get-Content SHA256SUMS.txt
+          Pop-Location
 
-      - name: Atualizar release "latest"
-        if: startsWith(github.ref, 'refs/heads/')
+      - name: Guardar artefato do build
+        uses: actions/upload-artifact@v4
+        with:
+          name: micore-windows-x64
+          path: |
+            dist/MiCORE.exe
+            dist/MiCORE.zip
+            dist/SHA256SUMS.txt
+
+      - name: Publicar Release
+        if: ${{ env.RELEASE == 'true' }}
         shell: pwsh
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.ver.outputs.tag }}
         run: |
-          $sha = "$env:GITHUB_SHA".Substring(0, 7)
-          gh release delete latest --cleanup-tag --yes
-          gh release create latest MiCORE.zip dist/MiCORE.exe --target $env:GITHUB_SHA --latest --title "MiCORE (versão mais recente)" --notes-file NOVIDADES.md
+          $repo = $env:GITHUB_REPOSITORY
+          $notes = @"
+          Baixe o **MiCORE.exe** (arquivo único, não precisa instalar) ou o **MiCORE.zip** (com o LEIA-ME). Confira os hashes em SHA256SUMS.txt.
 
-      - name: Release da versão (tag)
-        if: startsWith(github.ref, 'refs/tags/')
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create $env:GITHUB_REF_NAME MiCORE.zip dist/MiCORE.exe --title "MiCORE $env:GITHUB_REF_NAME" --generate-notes --latest=false
+          [Code signing policy](https://github.com/$repo/blob/main/CODE_SIGNING.md) (inclui a política de privacidade).
+
+          ---
+
+          "@ + (Get-Content NOVIDADES.md -Raw)
+          Set-Content notes.md $notes -Encoding utf8
+          gh release view $env:TAG -R $repo *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $env:TAG dist/MiCORE.exe dist/MiCORE.zip dist/SHA256SUMS.txt -R $repo --clobber
+            gh release edit $env:TAG -R $repo --notes-file notes.md --latest
+          } else {
+            gh release create $env:TAG dist/MiCORE.exe dist/MiCORE.zip dist/SHA256SUMS.txt -R $repo --target $env:GITHUB_SHA --title "MiCORE $env:TAG" --notes-file notes.md --latest
+          }

@@ -29,8 +29,8 @@ public sealed class CorsairDevice
 }
 
 /// <summary>
-/// Ponte com o iCUE SDK v4 da Corsair (iCUESDK.x64_2019.dll). A DLL (redistribuível oficial) vem dentro do MiCORE.exe
-/// e é extraída para %AppData%\MiCORE na primeira vez (BundledDeps); também é aceita na pasta do programa. O iCUE precisa estar aberto, com o SDK habilitado nas configurações.
+/// Ponte com o iCUE SDK v4 da Corsair (iCUESDK.x64_2019.dll). A DLL é proprietária e não vem no MiCORE.exe: é baixada do
+/// GitHub oficial da Corsair pelo botão BAIXAR O SDK (CorsairSdkInstaller) para %AppData%\MiCORE, ou aceita na pasta do programa. O iCUE precisa estar aberto, com o SDK habilitado nas configurações.
 /// Nada é gravado no hardware: as cores valem enquanto o controle estiver ativo e voltam ao iCUE ao liberar.
 /// </summary>
 public sealed unsafe class CorsairSdk : IDisposable
@@ -82,7 +82,6 @@ public sealed unsafe class CorsairSdk : IDisposable
     public string? LoadDll()
     {
         if (DllLoaded) return null;
-        BundledDeps.EnsureIcueSdk(); // a DLL vem dentro do MiCORE.exe e é extraída para %AppData%\MiCORE se faltar
         var dirs = new List<string> { AppContext.BaseDirectory, Path.Combine(AppContext.BaseDirectory, "x64"), AppSettings.Folder };
         var names = new[] { DllFile, "iCUESDK.dll" };
         foreach (var d in dirs)

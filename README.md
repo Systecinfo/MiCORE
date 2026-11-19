@@ -1,8 +1,12 @@
 <p align="center"><img src="Assets/logo.svg" width="120" alt="MiCORE"></p>
 
-# MiCORE — v0.16
+# MiCORE — v0.17
 
-> **Download oficial:** apenas em [github.com/SEU-USUARIO/MiCORE/releases](https://github.com/SEU-USUARIO/MiCORE/releases).
+**Download:** [`MiCORE.exe`](https://github.com/Systecinfo/MiCORE/releases/latest/download/MiCORE.exe) ·
+[`MiCORE.zip`](https://github.com/Systecinfo/MiCORE/releases/latest/download/MiCORE.zip) ·
+[todas as versões](../../releases) · **[Code signing policy](CODE_SIGNING.md)** (inclui a política de privacidade)
+
+> **Download oficial:** apenas em [github.com/Systecinfo/MiCORE/releases](https://github.com/Systecinfo/MiCORE/releases).
 > O app roda como administrador; não use versões baixadas de outros lugares.
 >
 > **Contribuições:** este projeto não aceita pull requests. Fique à vontade para fazer um *fork* e modificar a sua própria cópia
@@ -87,8 +91,7 @@ App WPF (.NET 8) com:
   - *Drivers seriais* (`MakerDrivers.cs`, `MainWindow.Maker.cs`): diagnóstico das placas conectadas com **CH340/CH341, CP2102/CP210x,
     FTDI, Prolific PL2303 e Arduino** pelo código do Gerenciador de Dispositivos (sem driver, código 10, 43, FTDI falsificado com PID 0000),
     com orientação para cada caso; **REINSTALAR** (remove e detecta de novo); lista das versões de driver guardadas no Windows com
-    **REMOVER** (backup antes, para voltar a uma versão anterior ou desinstalar de vez) e "Restaurar removidos"; **drivers oficiais incluídos no app** (CH340 4.0, CP210x 11.6,
-    FTDI 2.12.36.20 e Arduino, em `Drivers`, veja `Drivers/LEIA-ME.md`) que instalam sem internet; e link para a página oficial de cada fabricante. **Arduino IDE**: instalar/atualizar pelo winget (traz os drivers das placas oficiais),
+    **REMOVER** (backup antes, para voltar a uma versão anterior ou desinstalar de vez) e "Restaurar removidos"; e link para a página oficial de cada fabricante (os drivers seriais são proprietários e não vão dentro do app). **Arduino IDE**: instalar/atualizar pelo winget (traz os drivers das placas oficiais),
     fechar programas que prendem a porta (monitor serial, PuTTY, Cura...) e limpar o cache de índices quando a IDE trava em "Downloading index".
 - **Inicialização** (`StartupManager.cs`, `MainWindow.Startup.cs`): lista os programas que abrem com o Windows (chaves Run do usuário e
   de todos os usuários, 32 e 64 bits, e pastas Inicializar) com descrição e fabricante. Interruptor para ativar/desativar igual ao
@@ -115,7 +118,7 @@ App WPF (.NET 8) com:
   tempo de DNS, velocidade de download/upload (servidor público speed.cloudflare.com) e latência sob carga (bufferbloat). O veredito aponta se o
   problema está na rede local (Wi-Fi/cabo/roteador), no provedor ou se a conexão está estável.
 - **MiCORE INTEGRAÇÃO** (`LightBackends.cs`, `CorsairSdk.cs`, `CorsairSdkInstaller.cs`, `MainWindow.Integ.cs`): controle de iluminação e efeitos
-  de todo o PC numa tela só (em teste). Pontes: **Corsair iCUE / iCUE LINK** (iCUE SDK v4; a DLL redistribuível oficial vem dentro do .exe, veja `Native/LEIA-ME.md`, ou é baixada pelo programa com
+  de todo o PC numa tela só (em teste). Pontes: **Corsair iCUE / iCUE LINK** (iCUE SDK v4; a DLL é proprietária da Corsair, então não vem no .exe: é baixada do GitHub oficial da Corsair pelo programa, com confirmação e
   verificação de assinatura), **OpenRGB** (servidor SDK local; é o caminho para **MSI Mystic Light, Gigabyte RGB Fusion, ASUS Aura**, RAM, Razer,
   Logitech e outras, já que essas marcas não têm SDK público) e **Razer Chroma** (API REST do Synapse). Efeitos: cor fixa, respiração, arco-íris em onda,
   e cores que seguem a **temperatura da CPU/GPU** ou a **carga da CPU**, com brilho e velocidade. Ao devolver ou fechar, cada fabricante reassume as luzes.
@@ -151,7 +154,7 @@ App WPF (.NET 8) com:
 ## Requisitos
 - Windows 10/11
 - .NET 8 SDK (https://dotnet.microsoft.com/download)
-- Driver **PawnIO** (temperatura/consumo da CPU): já vem embutido (`Native/PawnIO_setup.exe`) e é instalado em silêncio na primeira abertura.
+- Driver **PawnIO** (temperatura/consumo da CPU): já vem embutido (`Native/PawnIO_setup.exe`, GPL-2.0); na primeira abertura o app pergunta se pode instalar.
   A LibreHardwareMonitorLib 0.9.6+ usa o PawnIO no lugar do antigo WinRing0, que o Windows Defender bloqueia.
 
 ## Como rodar
@@ -161,7 +164,7 @@ dotnet run
 ```
 O app pede privilégio de administrador (necessário para sensores de baixo nível).
 Para levar a outro PC: dê dois cliques em `publicar.bat`. Ele gera `..\MiCORE-dist\MiCORE.exe` (arquivo único, com o .NET embutido,
-sem caminhos do seu usuário) + `LEIA-ME.txt`. No outro PC não é preciso instalar nada: o PawnIO e o iCUE SDK vão dentro do .exe. Rode de novo após cada alteração no código.
+sem caminhos do seu usuário) + `LEIA-ME.txt`. No outro PC não é preciso instalar nada: o instalador do PawnIO vai dentro do .exe. Rode de novo após cada alteração no código.
 
 ### Baixar a versão mais recente
 A cada push na `main`, o GitHub Actions (`.github/workflows/publicar.yml`) gera o `MiCORE.exe` e atualiza a release

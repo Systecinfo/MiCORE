@@ -1,4 +1,31 @@
-## Novidades da v0.16
+## Novidades da v0.17 (primeira versão MiCORE)
+
+**Nova marca · MiCORE**
+- Nome, logo (planeta com anel e um processador no centro) e ícone novos em todo o app.
+
+**Nova página · MiCORE FERRAMENTAS › Limpeza**
+- **ANALISAR** mostra quanto cada item libera antes de apagar; **LIMPAR** pede confirmação e mostra o resultado de cada item.
+- Windows: temporários do usuário (%TEMP%) e do Windows (Temp), Prefetch, Lixeira, cache do Windows Update, Otimização
+  de Entrega, relatórios de erro, despejos de memória, miniaturas e logs do CBS/DISM.
+- Jogos: cache de shaders do DirectX, NVIDIA, AMD e Intel.
+- Navegadores e programas instalados pelas regras abertas do Winapp2 (Brave, Chrome, Edge, Firefox, Discord, Steam, Spotify...).
+- Senhas, cookies, sessões e histórico começam desmarcados; pastas do sistema nunca são apagadas inteiras.
+
+**Nova página · MiCORE SISTEMA › Dispositivos na rede**
+- Encontra os aparelhos da sua rede (ping + tabela ARP, inclusive os que bloqueiam ping), com nome, MAC e fabricante.
+- Mostra serviços abertos (painel web, pastas, área de trabalho remota, SSH) com botão para abrir; Wake-on-LAN e exportação CSV.
+
+**Menos passos manuais**
+- O driver de sensores da CPU (PawnIO) vem dentro do app: na primeira abertura ele pergunta se pode instalar.
+- O winget é instalado sozinho quando falta (Windows LTSC ou sem Microsoft Store), em Instalar apps e na Arduino IDE.
+
+**Só código aberto dentro do .exe**
+- O SDK da Corsair e os drivers seriais CH340/CP210x/FTDI (proprietários) não vêm mais no executável: o app abre a página
+  oficial ou baixa do fabricante quando você pede.
+
+---
+
+## Novidades da v0.16 (versão anterior)
 
 **Nova página · MiCORE FERRAMENTAS › Inicialização**
 - Lista os programas que abrem junto com o Windows: chaves Run do registro (usuário, todos os usuários, 32 e 64 bits)
@@ -20,8 +47,7 @@
 - **REINSTALAR** remove o dispositivo e faz o Windows detectar de novo com o melhor driver.
 - Lista as versões de driver guardadas no Windows para cada chip, com **REMOVER** (backup antes): volta para uma versão
   anterior quando a nova não funciona com clones, ou desinstala de vez. **Restaurar removidos** desfaz.
-- **Drivers incluídos no app**: CH340 4.0, CP210x 11.6, FTDI 2.12.36.20 e Arduino, oficiais e assinados, instalam sem internet
-  (ideal logo depois de formatar), com a placa conectada ou não. Também abre a página oficial de cada fabricante.
+- Abre a página oficial do driver de cada fabricante.
 - **Arduino IDE**: instalar/atualizar pelo winget, fechar programas que prendem a porta COM e limpar o cache de índices
   quando a IDE trava em "Downloading index".
 

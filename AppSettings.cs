@@ -70,6 +70,9 @@ public sealed class AppSettings
     // Aparência
     public bool LightTheme { get; set; }
 
+    /// <summary>Já perguntou se pode instalar o driver PawnIO (pergunta só na primeira abertura).</summary>
+    public bool PawnIOAsked { get; set; }
+
     // Overlay
     public string OverlayCorner { get; set; } = "TL";
     public double OverlayScale { get; set; } = 1.0;

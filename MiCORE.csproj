@@ -10,7 +10,17 @@
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <AssemblyName>MiCORE</AssemblyName>
     <Product>MiCORE</Product>
-    <Version>0.16.0</Version>
+    <Version>0.17.0</Version>
+    <!-- Metadados do .exe (Propriedades › Detalhes). O SignPath confere nome do produto e versão:
+         ao mudar a versão, atualize também signpath/artifact-configuration.xml. -->
+    <InformationalVersion>$(Version).0</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <AssemblyTitle>MiCORE</AssemblyTitle>
+    <Description>MiCORE - diagnóstico, benchmark, limpeza e otimização de PC para Windows</Description>
+    <Company>Systecinfo</Company>
+    <Authors>Systecinfo</Authors>
+    <Copyright>Copyright (c) 2026 MiCORE · licença MIT</Copyright>
+    <RepositoryUrl>https://github.com/Systecinfo/MiCORE</RepositoryUrl>
     <!-- Sempre otimizado: o MiCORE BENCH e os stress tests precisam do JIT otimizado também em Debug -->
     <Optimize>true</Optimize>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -23,14 +33,8 @@
     <Resource Include="Assets\logo-dark.png" />
   </ItemGroup>
 
-  <!-- Drivers seriais oficiais embutidos (MiCORE MAKER): cada pasta Drivers\<chip> vira recurso e é extraída na hora de instalar.
-       Para incluir outro, basta criar a pasta com o .inf/.cat/.sys e ligá-la em MakerDrivers.Chips (Bundle). -->
-  <ItemGroup>
-    <EmbeddedResource Include="Drivers\**\*" Exclude="Drivers\*.md;Drivers\*.txt" LogicalName="Drivers/%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>
-
-  <!-- Dependências embutidas no .exe (BundledDeps.cs): instalador do driver PawnIO (sensores da CPU) e
-       iCUE SDK da Corsair (MiCORE INTEGRAÇÃO). São extraídas só quando faltam no PC. Ver Native\LEIA-ME.md. -->
+  <!-- Dependências embutidas no .exe (BundledDeps.cs): instalador do driver PawnIO (sensores da CPU, GPL-2.0),
+       tabela de fabricantes por MAC (IEEE) e regras de limpeza (Winapp2). Nada proprietário vai dentro do .exe. Ver Native\LEIA-ME.md. -->
   <ItemGroup>
     <EmbeddedResource Include="Native\*" Exclude="Native\*.md" LogicalName="Native/%(Filename)%(Extension)" />
   </ItemGroup>

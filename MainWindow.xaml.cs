@@ -159,13 +159,25 @@ public partial class MainWindow : Window
 
         async Task LoadSensors()
         {
-            // O driver PawnIO vem dentro do MiCORE.exe: se faltar, é instalado em silêncio antes de abrir os sensores,
-            // para a temperatura e o consumo da CPU já aparecerem nesta mesma execução.
-            if (!SensorMonitor.IsPawnIOInstalled && SensorMonitor.IsElevated)
+            // O instalador do PawnIO vem dentro do MiCORE.exe. Instalar um driver muda o sistema, então pergunta uma vez
+            // (na primeira abertura); com SIM, instala antes de abrir os sensores, para a temperatura já aparecer agora.
+            // Se o usuário recusar, o botão CORRIGIR do menu lateral instala depois.
+            if (!SensorMonitor.IsPawnIOInstalled && SensorMonitor.IsElevated && !_settings.PawnIOAsked)
             {
-                StatusText.Text = "Instalando o driver de sensores (PawnIO)…";
-                string? err = await BundledDeps.EnsurePawnIOAsync();
-                if (err != null) StatusText.Text = "Driver de sensores: " + err;
+                _settings.PawnIOAsked = true;
+                try { _settings.Save(); } catch { }
+                var answer = MessageBox.Show(this,
+                    "Para mostrar a temperatura e o consumo da CPU, o MiCORE precisa instalar o driver PawnIO " +
+                    "(gratuito, código aberto, assinado pelo autor e usado também pelo LibreHardwareMonitor e pelo FanControl).\n\n" +
+                    "Ele já vem dentro do MiCORE, não baixa nada. Para remover depois: Configurações › Aplicativos › PawnIO.\n\n" +
+                    "Instalar agora?",
+                    "MiCORE · driver de sensores", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (answer == MessageBoxResult.Yes)
+                {
+                    StatusText.Text = "Instalando o driver de sensores (PawnIO)…";
+                    string? err = await BundledDeps.EnsurePawnIOAsync();
+                    if (err != null) StatusText.Text = "Driver de sensores: " + err;
+                }
             }
             try { await _monitor.OpenAsync(); }
             catch (Exception ex) { StatusText.Text = $"Sensores indisponíveis: {ex.Message}"; return; }
@@ -226,7 +238,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        // O instalador do PawnIO vem dentro do MiCORE.exe: instala em silêncio, sem internet nem winget.
+        // O instalador do PawnIO vem dentro do MiCORE.exe: instala sem internet nem winget, com a confirmação do usuário.
+        if (MessageBox.Show(this, SensorMonitor.Explain(p) + "\n\nInstalar o driver PawnIO agora? (para remover depois: Configurações › Aplicativos › PawnIO)",
+                            "MiCORE · driver de sensores", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         BtnFixCpuSensors.IsEnabled = false;
         CpuSensorWarnText.Text = "Instalando o driver…";
         string? err = await BundledDeps.EnsurePawnIOAsync();

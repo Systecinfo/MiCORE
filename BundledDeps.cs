@@ -5,13 +5,13 @@ using System.Reflection;
 namespace MiCORE;
 
 /// <summary>
-/// Dependências que vêm dentro do MiCORE.exe (pasta Native\ do projeto), para o app funcionar sem downloads
-/// nem instaladores de pacotes: o driver PawnIO (temperatura/consumo da CPU) e o iCUE SDK da Corsair.
+/// Dependências que vêm dentro do MiCORE.exe (pasta Native\ do projeto): o instalador do driver PawnIO
+/// (temperatura/consumo da CPU, GPL-2.0). Componentes proprietários (iCUE SDK, drivers seriais) não vão no .exe:
+/// são baixados do site oficial do fabricante quando o usuário pede.
 /// </summary>
 public static class BundledDeps
 {
     private const string PawnIOResource = "Native/PawnIO_setup.exe";
-    private const string IcueResource = "Native/iCUESDK.x64_2019.dll";
 
     /// <summary>Copia um recurso embutido para um arquivo. Devolve false se o recurso não existir.</summary>
     private static bool Extract(string resource, string destination)
@@ -49,20 +49,5 @@ public static class BundledDeps
         }
         catch (Exception ex) { return "falha ao instalar o PawnIO: " + ex.Message; }
         finally { try { Directory.Delete(dir, true); } catch { } }
-    }
-
-    /// <summary>
-    /// Garante o iCUESDK.x64_2019.dll em %AppData%\MiCORE (extraído de dentro do .exe) e devolve o caminho,
-    /// ou null se não foi possível.
-    /// </summary>
-    public static string? EnsureIcueSdk()
-    {
-        string target = CorsairSdkInstaller.TargetPath;
-        try
-        {
-            if (File.Exists(target)) return target;
-            return Extract(IcueResource, target) ? target : null;
-        }
-        catch { return File.Exists(target) ? target : null; }
     }
 }

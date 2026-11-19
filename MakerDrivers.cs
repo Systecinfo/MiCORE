@@ -121,7 +121,7 @@ public static class MakerDrivers
         {
             null => (true, d.Port != null ? $"Funcionando na {d.Port}" : "Funcionando", ""),
             28 => (false, "Sem driver (código 28)",
-                   "Instale o driver em DRIVERS INCLUÍDOS, logo abaixo. Se o chip não estiver lá, use PÁGINA OFICIAL."),
+                   "Instale o driver oficial pelo botão PÁGINA OFICIAL do chip, ou use REINSTALAR para o Windows procurar um."),
             10 => (false, "O dispositivo não inicia (código 10)", chip.Name switch
             {
                 "CH340/CH341" => "Comum em clones do CH340 com a versão mais nova do driver. Tente REINSTALAR. Se continuar, remova a " +

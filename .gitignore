@@ -16,8 +16,6 @@ MiCORE-dist/
 # Local
 *.log
 
-# Drivers seriais embutidos (MiCORE MAKER): as DLLs fazem parte dos pacotes assinados
-!Drivers/**
 
 # Dependencias embutidas no .exe (PawnIO e iCUE SDK): fazem parte do projeto
 !Native/**

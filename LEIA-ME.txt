@@ -7,8 +7,8 @@ MiCORE OTIMIZA (limpeza de memória e ajustes para jogos) e stress test de CPU /
 
 REQUISITOS
 - Windows 10 ou 11, 64 bits. Não precisa instalar o .NET (já vem dentro do .exe).
-- O driver de temperatura e consumo da CPU (PawnIO) já vem dentro do MiCORE e é instalado
-  sozinho na primeira vez que o programa abre. Não precisa baixar nada.
+- O driver de temperatura e consumo da CPU (PawnIO) já vem dentro do MiCORE. Na primeira vez que
+  o programa abre, ele pergunta se pode instalar (não precisa baixar nada).
 - Aceite o pedido de administrador ao abrir (necessário para ler os sensores).
 - Se a temperatura/consumo da CPU não aparecerem, o menu lateral mostra o motivo e um
   botão CORRIGIR, que instala o driver com um clique. Depois feche e abra o programa.

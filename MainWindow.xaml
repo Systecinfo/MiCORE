@@ -2643,8 +2643,8 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Drivers oficiais embutidos no app -->
-                        <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                        <!-- Drivers embutidos no app (só aparece se houver algum em Drivers\: hoje nenhum, pois os oficiais são proprietários) -->
+                        <Border x:Name="MakerBundledCard" Style="{StaticResource CardBorder}" Margin="0,0,0,14" Visibility="Collapsed">
                             <StackPanel>
                                 <Grid Margin="0,0,0,6">
                                     <TextBlock Text="DRIVERS INCLUÍDOS" Style="{StaticResource Label}"/>

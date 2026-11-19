@@ -295,7 +295,7 @@ public sealed class RazerChromaBackend : ILightBackend
         {
             title = "MiCORE",
             description = "Controle de iluminação do MiCORE",
-            author = new { name = "MiCORE", contact = "https://github.com/SEU-USUARIO/MiCORE" },
+            author = new { name = "MiCORE", contact = "https://github.com/Systecinfo/MiCORE" },
             device_supported = Kinds.Select(k => k.Key).ToArray(),
             category = "application",
         });

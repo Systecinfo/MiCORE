@@ -52,7 +52,9 @@ public partial class MainWindow
         catch (Exception ex) { MakerStatus.Text = $"Não foi possível ler os drivers: {ex.Message}"; pkgs = new(); }
         MakerPackages.ItemsSource = pkgs;
         MakerNoPackages.Visibility = pkgs.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-        MakerBundled.ItemsSource = MakerDrivers.Bundled(pkgs);
+        var bundled = MakerDrivers.Bundled(pkgs);
+        MakerBundled.ItemsSource = bundled;
+        MakerBundledCard.Visibility = bundled.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
         BtnMakerRestore.IsEnabled = MakerDrivers.HasBackups;
     }
 
