@@ -71,6 +71,11 @@ App WPF (.NET 8) com:
 - **MiCORE OC** (`MainWindow.Oc.cs`, `OcCheck.cs`): ajuste de limite de energia e travamento de clock da GPU NVIDIA (via NVML) com botão de restaurar,
   e **verificação de estabilidade** de overclock (CPU, GPU ou ambos; 5/15/30 min) com limites de segurança de temperatura, leitura de erros
   de hardware (WHEA, reset de driver de vídeo), veredito, histórico e guia de BIOS conforme a placa-mãe e a CPU.
+- **Limpeza** (`Cleaner.cs`, `MainWindow.Clean.cs`): ANALISAR mostra quanto cada item libera antes de apagar. Categorias próprias: temporários do usuário
+  (%TEMP%) e do Windows (Temp), Prefetch, Lixeira, cache do Windows Update, Otimização de Entrega, relatórios de erro, despejos de memória,
+  miniaturas, logs do CBS/DISM e cache de shaders (DirectX, NVIDIA, AMD, Intel). Programas e navegadores pelas regras do **Winapp2**
+  (`Native/Winapp2.ini.gz`, CC BY-SA 4.0), só os instalados no PC. Travas: não apaga a raiz de pastas do sistema, não segue junções, só
+  limpa o registro do usuário atual, pula arquivos em uso e temporários da última hora; senhas, cookies e sessões começam desmarcados.
 - **MiCORE OTIMIZA** (`Optimizer.cs`, `WindowsTweaks.cs`): um botão que limpa a memória em espera (como o ISLC) e enxuga a RAM dos
   processos, e fecha os programas marcados (pré-marca só os seguros: OneDrive, Teams, Widgets, Adobe...; programas com janela são
   fechados sem forçar). Ajustes do Windows com interruptor e "Restaurar originais": plano Alto desempenho, Modo de Jogo, desativar
@@ -130,7 +135,7 @@ App WPF (.NET 8) com:
   - **MiCORE SISTEMA** · Sistema, Sensores, Placa de vídeo, Discos, Energia, Rede, Dispositivos na rede.
   - **MiCORE JOGOS** · Biblioteca, FPS estimado, Gargalo, Overlay.
   - **MiCORE DESEMPENHO** · Benchmark, Stress test, Overclock.
-  - **MiCORE FERRAMENTAS** · Otimização, Inicialização, Instalar apps, Drivers, Integração.
+  - **MiCORE FERRAMENTAS** · Otimização, Limpeza, Inicialização, Instalar apps, Drivers, Integração.
   - **MiCORE MAKER** · Portas COM, Drivers seriais.
 - Botão de **modo escuro/claro** no canto superior direito (`ThemeManager.cs`); a escolha fica salva. O overlay de jogos e os avisos de dispositivo ficam sempre escuros.
 - Leitura ao vivo de temperatura e carga da CPU e da GPU sempre visível no rodapé do menu.

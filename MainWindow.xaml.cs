@@ -137,6 +137,7 @@ public partial class MainWindow : Window
             ShutdownInteg();
             _launchCts?.Cancel();
             _lanCts?.Cancel();
+            _cleanCts?.Cancel();
             _monitor.Dispose();
         };
     }
@@ -274,6 +275,7 @@ public partial class MainWindow : Window
             case "PageDisks": RefreshDiskHealth(); break;
             case "PageEnergy": RefreshEnergy(); break;
             case "PageLan": InitLan(); break;
+            case "PageClean": InitClean(); break;
             case "PageOc": UpdateOcGpuState(); UpdateRecentErrors(); break;
             case "PageInteg": InitInteg(); break;
             case "PageLauncher": InitLauncher(); break;
@@ -288,7 +290,7 @@ public partial class MainWindow : Window
 
     private void ShowPage(string name)
     {
-        foreach (var p in new FrameworkElement[] { PageDash, PageSystem, PageSensors, PageGpu, PageGames, PageBottleneck, PageOverlay, PageBench, PageOptimize, PageOc, PageInteg, PageLauncher, PageDriver, PageStartup, PageApps, PageMakerPorts, PageMakerDrv, PageDisks, PageEnergy, PageNet, PageLan, PageStress })
+        foreach (var p in new FrameworkElement[] { PageDash, PageSystem, PageSensors, PageGpu, PageGames, PageBottleneck, PageOverlay, PageBench, PageOptimize, PageOc, PageInteg, PageLauncher, PageDriver, PageStartup, PageApps, PageMakerPorts, PageMakerDrv, PageDisks, PageEnergy, PageNet, PageLan, PageClean, PageStress })
             p.Visibility = p.Name == name ? Visibility.Visible : Visibility.Collapsed;
     }
 
