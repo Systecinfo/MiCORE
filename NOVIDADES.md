@@ -1,3 +1,13 @@
+## Novidades da v0.17.1
+
+**Instalador pequeno · MiCORE-Setup.exe (~150 KB)**
+- Baixa a versão mais recente do GitHub (MiCORE.zip, ~80 MB), confere o SHA256 publicado e instala em `C:\Program Files\MiCORE`.
+- Cria atalho no Menu Iniciar (e na Área de Trabalho, se marcado) e a entrada em Configurações › Aplicativos para desinstalar.
+- Atualização automática opcional: verifica o GitHub ao ligar o PC e uma vez por dia, e só atualiza com o MiCORE fechado.
+- A versão portátil continua no **MiCORE.zip** (não precisa instalar).
+
+---
+
 ## Novidades da v0.17 (primeira versão MiCORE)
 
 **Nova marca · MiCORE**

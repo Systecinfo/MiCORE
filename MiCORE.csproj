@@ -10,7 +10,7 @@
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <AssemblyName>MiCORE</AssemblyName>
     <Product>MiCORE</Product>
-    <Version>0.17.0</Version>
+    <Version>0.17.1</Version>
     <!-- Metadados do .exe (Propriedades › Detalhes). O SignPath confere nome do produto e versão:
          ao mudar a versão, atualize também signpath/artifact-configuration.xml. -->
     <InformationalVersion>$(Version).0</InformationalVersion>
@@ -25,6 +25,12 @@
     <Optimize>true</Optimize>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <!-- O instalador (installer\) é outro programa, compilado à parte por installer\build.ps1 -->
+  <ItemGroup>
+    <Compile Remove="installer\**" />
+    <None Remove="installer\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\logo.png" />

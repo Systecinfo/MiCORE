@@ -1,9 +1,10 @@
 <p align="center"><img src="Assets/logo.svg" width="120" alt="MiCORE"></p>
 
-# MiCORE — v0.17
+# MiCORE — v0.17.1
 
-**Download:** [`MiCORE.exe`](https://github.com/Systecinfo/MiCORE/releases/latest/download/MiCORE.exe) ·
-[`MiCORE.zip`](https://github.com/Systecinfo/MiCORE/releases/latest/download/MiCORE.zip) ·
+**Download:** [`MiCORE-Setup.exe`](https://github.com/Systecinfo/MiCORE/releases/latest/download/MiCORE-Setup.exe)
+(instalador de ~150 KB: baixa a versão mais recente, confere o SHA256, instala e atualiza sozinho) ·
+[`MiCORE.zip`](https://github.com/Systecinfo/MiCORE/releases/latest/download/MiCORE.zip) (portátil) ·
 [todas as versões](../../releases) · **[Code signing policy](CODE_SIGNING.md)** (inclui a política de privacidade)
 
 > **Download oficial:** apenas em [github.com/Systecinfo/MiCORE/releases](https://github.com/Systecinfo/MiCORE/releases).

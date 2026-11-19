@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Configuração de artefato do MiCORE-Setup.exe no SignPath (crie uma segunda "artifact configuration" no projeto
+     com este conteúdo e coloque o slug dela na variável SIGNPATH_ARTIFACT_CONFIG_SETUP).
+     O Setup só muda quando installer/ muda; ao mudar, suba AssemblyVersion em installer/MiCORESetup.cs e aqui. -->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <zip-file>
+    <pe-file path="MiCORE-Setup.exe" product-name="MiCORE" product-version="1.0.0.0">
+      <authenticode-sign/>
+    </pe-file>
+  </zip-file>
+</artifact-configuration>

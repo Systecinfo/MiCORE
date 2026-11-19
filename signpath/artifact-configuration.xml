@@ -2,10 +2,11 @@
 <!-- Configuração de artefato do projeto MiCORE no SignPath (cole este conteúdo no projeto, no site do SignPath).
      O GitHub Actions (.github/workflows/publicar.yml) envia um ZIP com o MiCORE.exe na raiz; o SignPath assina o exe
      e confere os metadados exigidos pela SignPath Foundation (nome e versão do produto).
-     Ao mudar <Version> no MiCORE.csproj, atualize product-version aqui e no SignPath (formato x.y.z.0). -->
+     Ao mudar <Version> no MiCORE.csproj, atualize product-version aqui e no SignPath (formato x.y.z.0).
+     Slug desta configuração no SignPath: variável SIGNPATH_ARTIFACT_CONFIG_EXE. O Setup tem a sua: artifact-configuration-setup.xml. -->
 <artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
   <zip-file>
-    <pe-file path="MiCORE.exe" product-name="MiCORE" product-version="0.17.0.0">
+    <pe-file path="MiCORE.exe" product-name="MiCORE" product-version="0.17.1.0">
       <authenticode-sign/>
     </pe-file>
   </zip-file>
