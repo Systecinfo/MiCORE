@@ -101,6 +101,11 @@ App WPF (.NET 8) com:
 - **Energia** (`BatteryInfo.cs`, `MainWindow.Net.cs`): bateria de notebook com desgaste (capacidade atual × de projeto), ciclos de carga, estado,
   autonomia, tensão e potência, com veredito; fonte de energia (tomada/bateria), plano de energia do Windows e consumo dos sensores de CPU e GPU.
   Em PC de mesa mostra só o cartão de energia.
+- **Dispositivos na rede** (`LanScanner.cs`, `MainWindow.Lan.cs`): varredura da rede local no estilo dos scanners de IP. Detecta a sub-rede sozinho (ou faixa/CIDR,
+  até 4096 endereços), faz ping em paralelo e lê a tabela ARP do Windows (acha até quem bloqueia ping), identifica nome por DNS reverso e NetBIOS,
+  MAC e fabricante (registro OUI público do IEEE, `Native/oui.txt.gz`), marca MAC aleatório de celular e testa as portas 80/443/8080, 21, 22, 445,
+  3389, 5900 e 9100 (título da página web, versão do SSH/FTP). Botões abrem o serviço (navegador, Explorer, área de trabalho remota, SSH),
+  Wake-on-LAN pelo MAC e exportação em CSV. Uma rede /24 leva uns 10 s.
 - **Rede** (`NetworkTest.cs`): diagnóstico de lag em ~30 s — latência, jitter e perda de pacotes até o roteador e até a internet (1.1.1.1 e 8.8.8.8),
   tempo de DNS, velocidade de download/upload (servidor público speed.cloudflare.com) e latência sob carga (bufferbloat). O veredito aponta se o
   problema está na rede local (Wi-Fi/cabo/roteador), no provedor ou se a conexão está estável.
@@ -122,7 +127,7 @@ App WPF (.NET 8) com:
   com *Visão geral* no topo e categorias **MiCORE** recolhíveis (começam fechadas; clique para ver as sub-abas):
   - *Visão geral* (`MainWindow.Dash.cs`): gráfico de área CPU × GPU (temperatura, carga ou consumo; 1/5/15 min),
     desempenho do MiCORE BENCH, tabela de componentes, anéis de RAM/VRAM/disco, eventos recentes e saúde do PC.
-  - **MiCORE SISTEMA** · Sistema, Sensores, Placa de vídeo, Discos, Energia, Rede.
+  - **MiCORE SISTEMA** · Sistema, Sensores, Placa de vídeo, Discos, Energia, Rede, Dispositivos na rede.
   - **MiCORE JOGOS** · Biblioteca, FPS estimado, Gargalo, Overlay.
   - **MiCORE DESEMPENHO** · Benchmark, Stress test, Overclock.
   - **MiCORE FERRAMENTAS** · Otimização, Inicialização, Instalar apps, Drivers, Integração.

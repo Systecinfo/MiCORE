@@ -16,3 +16,12 @@ redistribuídos sem modificação.
 1. Baixe a versão nova da origem oficial e confira a assinatura digital (Propriedades › Assinaturas Digitais).
 2. Substitua o arquivo nesta pasta, mantendo o mesmo nome.
 3. Atualize a versão na tabela acima.
+
+## Dados
+
+| Arquivo | O que é | Origem oficial |
+|---|---|---|
+| `oui.txt.gz` | Tabela de fabricantes por MAC (prefixo OUI de 6 dígitos → nome da empresa), usada em Dispositivos na rede. Gerada do `oui.csv` público, só com prefixo e nome, compactada em gzip. | Registro MA-L do IEEE: [standards-oui.ieee.org/oui/oui.csv](https://standards-oui.ieee.org/oui/oui.csv) |
+
+Para atualizar a tabela: baixe o `oui.csv`, gere um arquivo de texto UTF-8 com uma linha `PREFIXO<TAB>Fabricante` por
+registro (prefixo em hexadecimal maiúsculo, sem separadores) e compacte com gzip como `oui.txt.gz`.
